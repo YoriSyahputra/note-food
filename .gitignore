@@ -1,24 +1,28 @@
-# Logs
-logs
-*.log
+# Node
+node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Vite build
+dist/
+.vite/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Android / Capacitor (folder android/ TETAP di-commit, hanya build output-nya yang diabaikan)
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/captures/
+android/*.iml
+android/.idea/
+android/app/release/
+
+# iOS (tidak dipakai, jaga-jaga)
+ios/
+
+# OS
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+Thumbs.db
+
+# Env
+.env
+.env.local
