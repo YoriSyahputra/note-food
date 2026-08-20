@@ -6,290 +6,698 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#060913" />
     <title>Note Food</title>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
-  <body class="bg-app text-slate-100 antialiased overflow-hidden">
-    <div id="app" class="h-screen w-screen flex flex-col relative">
-      <!-- TOP BAR -->
-      <header class="pt-safe px-5 pb-3 flex items-center justify-between z-20">
-        <div>
-          <h1 class="text-xl font-bold tracking-tight">🍱 Note Food</h1>
-          <p id="today-label" class="text-xs text-slate-400"></p>
+  <body class="bg-app text-slate-100 antialiased overflow-hidden select-none">
+    <!-- ANIMASI PEMBUKA SPLASH SCREEN (SPIRAL DIVE & WATER SPLASH) -->
+    <div
+      id="splash-screen"
+      class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060913] overflow-hidden"
+    >
+      <div class="water-background"></div>
+
+      <!-- Wadah Ikon Makanan Spiral -->
+      <div
+        id="splash-food-actor"
+        class="relative z-10 flex items-center justify-center"
+      >
+        <div
+          class="food-spin-node text-6xl md:text-7xl filter drop-shadow-[0_10px_25px_rgba(52,211,153,0.5)]"
+        >
+          🍱
+        </div>
+      </div>
+
+      <!-- Generator Efek Cipratan Air & Gelombang Cincin -->
+      <div
+        id="splash-water-impact"
+        class="absolute z-10 pointer-events-none flex items-center justify-center"
+      >
+        <div class="water-ring ring-1"></div>
+        <div class="water-ring ring-2"></div>
+        <div class="water-ring ring-3"></div>
+        <div class="splash-droplet drop-1"></div>
+        <div class="splash-droplet drop-2"></div>
+        <div class="splash-droplet drop-3"></div>
+        <div class="splash-droplet drop-4"></div>
+        <div class="splash-droplet drop-5"></div>
+        <div class="splash-droplet drop-6"></div>
+      </div>
+
+      <!-- Identitas Logo & Nama Note Food -->
+      <div
+        id="splash-brand"
+        class="relative z-20 mt-8 text-center opacity-0 transform translate-y-6"
+      >
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-2"
+        >
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span
+            class="text-[11px] font-medium tracking-wider text-emerald-300 uppercase"
+            >Jumat Berkah App</span
+          >
+        </div>
+        <h1 class="text-3xl font-black tracking-tight gradient-text">
+          Note Food
+        </h1>
+        <p class="text-xs text-slate-400 mt-1 font-light tracking-wide">
+          Pencatat Keuangan & Catatan Mandiri
+        </p>
+      </div>
+
+      <button
+        id="btn-skip-splash"
+        class="absolute bottom-8 text-xs text-slate-500 hover:text-slate-300 transition tracking-wider uppercase font-semibold"
+      >
+        Ketuk untuk Membuka
+      </button>
+    </div>
+
+    <!-- CONTAINER UTAMA APLIKASI -->
+    <div
+      id="app"
+      class="h-screen w-screen flex flex-col relative overflow-hidden"
+    >
+      <!-- DEKORATIF BLOB LATAR BELAKANG -->
+      <div class="blob w-72 h-72 bg-emerald-500/20 -top-10 -left-16"></div>
+      <div
+        class="blob w-80 h-80 bg-sky-500/15 top-1/3 -right-24"
+        style="animation-delay: -5s"
+      ></div>
+      <div
+        class="blob w-64 h-64 bg-teal-500/15 -bottom-10 left-12"
+        style="animation-delay: -9s"
+      ></div>
+
+      <!-- TOP HEADER -->
+      <header
+        class="pt-safe px-5 pb-3 flex items-center justify-between z-20 relative border-b border-white/5 bg-slate-950/30 backdrop-blur-xl"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-sky-400 flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20"
+          >
+            🍱
+          </div>
+          <div>
+            <h1 class="text-lg font-extrabold tracking-tight gradient-text">
+              Note Food
+            </h1>
+            <p
+              id="today-label"
+              class="text-[11px] text-slate-400 font-medium"
+            ></p>
+          </div>
         </div>
         <button
-          id="btn-backup"
-          class="glass-btn w-10 h-10 rounded-full flex items-center justify-center text-lg"
+          id="btn-header-settings"
+          class="glass-btn w-9 h-9 rounded-2xl flex items-center justify-center text-base"
+          title="Pengaturan"
         >
           ⚙️
         </button>
       </header>
 
-      <!-- MAIN SCROLL AREA -->
+      <!-- AREA UTAMA MULTI-PAGE VIEW -->
       <main
-        class="flex-1 overflow-y-auto px-5 pb-28 space-y-5"
+        class="flex-1 overflow-y-auto px-4 pb-28 pt-4 space-y-5 relative z-10"
         id="main-scroll"
       >
-        <!-- DASHBOARD VIEW -->
-        <section id="view-dashboard" class="space-y-5">
-          <div class="grid grid-cols-2 gap-3">
-            <div class="glass-card p-4 col-span-2">
-              <p class="text-xs text-slate-300/80">Pendapatan Bersih</p>
-              <p id="stat-net" class="text-2xl font-bold mt-1 tabular-nums">
-                Rp 0
-              </p>
+        <!-- VIEW 1: DASHBOARD -->
+        <section id="view-dashboard" class="view-panel space-y-4">
+          <!-- Kartu Utama: Pendapatan Bersih -->
+          <div class="glass-card hero-card p-5 relative overflow-hidden">
+            <div
+              class="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none"
+            ></div>
+            <div class="flex items-center justify-between mb-1">
+              <span
+                class="text-xs font-semibold text-emerald-300/90 tracking-wide uppercase"
+                >Pendapatan Bersih</span
+              >
+              <span
+                class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold"
+                >Live Real-time</span
+              >
             </div>
+            <p
+              id="stat-net"
+              class="text-3xl font-black mt-1 tabular-nums gradient-text tracking-tight"
+            >
+              Rp 0
+            </p>
+            <p class="text-[11px] text-slate-400 mt-1">
+              Total donasi masuk dikurangi seluruh rincian belanja bertahap.
+            </p>
+          </div>
+
+          <!-- Grid Ringkasan Masuk & Belanja -->
+          <div class="grid grid-cols-2 gap-3">
             <div class="glass-card p-4">
-              <p class="text-xs text-slate-300/80">Total Uang Masuk</p>
+              <div class="flex items-center gap-2 mb-1.5">
+                <div
+                  class="w-7 h-7 rounded-xl bg-emerald-500/20 flex items-center justify-center text-sm"
+                >
+                  💰
+                </div>
+                <span class="text-xs text-slate-300/80 font-medium"
+                  >Uang Masuk</span
+                >
+              </div>
               <p
                 id="stat-income"
-                class="text-lg font-semibold mt-1 tabular-nums text-emerald-300"
+                class="text-lg font-bold tabular-nums text-emerald-300"
               >
                 Rp 0
               </p>
             </div>
             <div class="glass-card p-4">
-              <p class="text-xs text-slate-300/80">Total Belanja</p>
+              <div class="flex items-center gap-2 mb-1.5">
+                <div
+                  class="w-7 h-7 rounded-xl bg-rose-500/20 flex items-center justify-center text-sm"
+                >
+                  🛒
+                </div>
+                <span class="text-xs text-slate-300/80 font-medium"
+                  >Total Belanja</span
+                >
+              </div>
               <p
                 id="stat-expense"
-                class="text-lg font-semibold mt-1 tabular-nums text-rose-300"
+                class="text-lg font-bold tabular-nums text-rose-300"
               >
                 Rp 0
               </p>
-            </div>
-            <div class="glass-card p-4 col-span-2">
-              <p class="text-xs text-slate-300/80">Uang Masuk Minggu Ini</p>
-              <p
-                id="stat-week-income"
-                class="text-lg font-semibold mt-1 tabular-nums text-sky-300"
-              >
-                Rp 0
-              </p>
-              <p id="stat-week-box" class="text-xs text-slate-400 mt-0.5"></p>
             </div>
           </div>
 
-          <div>
-            <h2 class="text-sm font-semibold text-slate-300 mb-2 px-1">
-              Transaksi Terbaru
-            </h2>
-            <div id="recent-list" class="space-y-2"></div>
+          <!-- Indikator Kuantitas Box Mingguan -->
+          <div class="glass-card p-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-slate-300 font-medium"
+                >Uang Masuk Minggu Ini</span
+              >
+              <span
+                id="stat-week-income"
+                class="text-sm font-extrabold tabular-nums text-sky-300"
+                >Rp 0</span
+              >
+            </div>
+            <div class="progress-track">
+              <div
+                id="week-progress-fill"
+                class="progress-fill"
+                style="width: 0%"
+              ></div>
+            </div>
+            <div
+              class="flex items-center justify-between text-[11px] text-slate-400 pt-0.5"
+            >
+              <span id="stat-week-box">0 box terjual minggu ini</span>
+              <span class="text-slate-500 font-medium">Target dinamis</span>
+            </div>
+          </div>
+
+          <!-- Transaksi Terkini -->
+          <div class="space-y-3 pt-1">
+            <div class="flex items-center justify-between px-1">
+              <h2
+                class="text-xs font-bold text-slate-300 uppercase tracking-wider"
+              >
+                Transaksi Jumat Berkah Terbaru
+              </h2>
+              <button
+                id="btn-quick-view-history"
+                class="text-[11px] text-emerald-400 hover:underline"
+              >
+                Lihat Semua
+              </button>
+            </div>
+            <div id="dashboard-tx-list" class="space-y-3"></div>
           </div>
         </section>
 
-        <!-- HISTORY VIEW -->
-        <section id="view-history" class="hidden space-y-4">
-          <div class="glass-card p-3 space-y-3">
-            <input
-              id="search-input"
-              type="text"
-              placeholder="Cari catatan..."
-              class="w-full bg-white/5 rounded-xl px-3 py-2 text-sm outline-none placeholder:text-slate-400 border border-white/10 focus:border-emerald-400/50 transition"
-            />
-            <div class="flex gap-2">
+        <!-- VIEW 2: RIWAYAT LENGKAP -->
+        <section id="view-history" class="view-panel hidden space-y-4">
+          <div class="glass-card p-4 space-y-3">
+            <div class="relative">
+              <span
+                class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"
+                >🔍</span
+              >
               <input
-                id="filter-start"
-                type="date"
-                class="flex-1 bg-white/5 rounded-xl px-2 py-2 text-xs border border-white/10 outline-none"
+                id="search-history-input"
+                type="text"
+                placeholder="Cari tanggal atau rincian belanja..."
+                class="input-field pl-9"
               />
-              <input
-                id="filter-end"
-                type="date"
-                class="flex-1 bg-white/5 rounded-xl px-2 py-2 text-xs border border-white/10 outline-none"
-              />
+            </div>
+            <div class="flex gap-2 items-center">
+              <div class="flex-1">
+                <label class="text-[10px] text-slate-400 block mb-1"
+                  >Dari Tanggal</label
+                >
+                <input
+                  id="filter-history-start"
+                  type="date"
+                  class="input-field text-xs py-2"
+                />
+              </div>
+              <div class="flex-1">
+                <label class="text-[10px] text-slate-400 block mb-1"
+                  >Sampai Tanggal</label
+                >
+                <input
+                  id="filter-history-end"
+                  type="date"
+                  class="input-field text-xs py-2"
+                />
+              </div>
               <button
-                id="btn-clear-filter"
-                class="glass-btn px-3 rounded-xl text-xs"
+                id="btn-reset-history-filter"
+                class="glass-btn px-3.5 py-2 rounded-xl text-xs self-end h-[38px] font-semibold"
               >
                 Reset
               </button>
             </div>
           </div>
-          <div id="history-list" class="space-y-2"></div>
+
+          <div id="history-full-list" class="space-y-3"></div>
         </section>
 
-        <!-- BACKUP VIEW -->
-        <section id="view-backup" class="hidden space-y-4">
-          <div class="glass-card p-4 space-y-3">
-            <h2 class="font-semibold">Cadangan Data (JSON)</h2>
-            <p class="text-xs text-slate-400">
-              Simpan seluruh data ke file JSON, atau pulihkan dari cadangan
-              sebelumnya. Semua data tersimpan lokal di perangkat.
-            </p>
+        <!-- VIEW 3: CATATAN (GOOGLE KEEP STYLE) -->
+        <section id="view-notes" class="view-panel hidden space-y-4">
+          <div
+            class="glass-card p-4 flex items-center justify-between bg-gradient-to-r from-emerald-500/10 via-sky-500/5 to-transparent"
+          >
+            <div>
+              <h2
+                class="font-bold text-sm text-slate-100 flex items-center gap-1.5"
+              >
+                <span>📌</span> Catatan Keep Note
+              </h2>
+              <p class="text-[11px] text-slate-400">
+                Daftar kebutuhan bahan & checklist sinkronisasi waktu.
+              </p>
+            </div>
             <button
-              id="btn-export"
-              class="w-full glass-btn-primary py-3 rounded-xl font-medium"
+              id="btn-create-note-banner"
+              class="glass-btn-primary px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1"
             >
-              ⬇️ Export Data (JSON)
+              <span>+</span> Baru
             </button>
-            <label
-              class="w-full glass-btn py-3 rounded-xl font-medium text-center block cursor-pointer"
+          </div>
+
+          <div class="relative">
+            <span
+              class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400"
+              >🔍</span
             >
-              ⬆️ Import Data (JSON)
+            <input
+              id="search-notes-input"
+              type="text"
+              placeholder="Cari catatan atau butir checklist..."
+              class="input-field pl-9"
+            />
+          </div>
+
+          <div
+            id="notes-grid"
+            class="grid grid-cols-1 md:grid-cols-2 gap-3"
+          ></div>
+        </section>
+
+        <!-- VIEW 4: PENGATURAN & CADANGAN DATA -->
+        <section id="view-settings" class="view-panel hidden space-y-4">
+          <div class="glass-card p-4 space-y-3">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center text-base"
+              >
+                🍱
+              </div>
+              <div>
+                <h2 class="font-bold text-sm">Harga Satuan Nasi Box</h2>
+                <p class="text-[11px] text-slate-400">
+                  Konfigurasi dasar estimasi kuantitas box dari total donasi.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="glass-card p-3 flex items-center justify-between bg-white/5"
+            >
+              <span class="text-xs text-slate-400">Harga Aktif Saat Ini</span>
+              <span
+                id="settings-current-price"
+                class="font-extrabold text-emerald-300 text-sm"
+                >Rp 15.000</span
+              >
+            </div>
+
+            <div class="flex gap-2">
               <input
-                id="import-file"
+                id="settings-price-input"
+                type="text"
+                inputmode="numeric"
+                placeholder="Contoh: 15.000"
+                class="input-field flex-1"
+              />
+              <button
+                id="btn-save-box-price"
+                class="glass-btn-primary px-4 rounded-xl text-xs font-bold shrink-0"
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 space-y-3">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-8 h-8 rounded-xl bg-sky-500/20 flex items-center justify-center text-base"
+              >
+                💾
+              </div>
+              <div>
+                <h2 class="font-bold text-sm">
+                  Cadangan & Impor Berkas (JSON)
+                </h2>
+                <p class="text-[11px] text-slate-400">
+                  Simpan seluruh data ke berkas cadangan offline secara mandiri.
+                </p>
+              </div>
+            </div>
+
+            <button
+              id="btn-export-json"
+              class="w-full glass-btn-primary py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2"
+            >
+              <span>⬇️</span> Ekspor Cadangan Data (JSON)
+            </button>
+
+            <label
+              class="w-full glass-btn py-3 rounded-xl font-bold text-xs text-center block cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>⬆️</span> Impor Cadangan Data (JSON)
+              <input
+                id="input-import-json"
                 type="file"
                 accept="application/json"
                 class="hidden"
               />
             </label>
-            <button
-              id="btn-reset-all"
-              class="w-full text-rose-300 text-sm py-2"
-            >
-              Hapus Semua Data
-            </button>
+
+            <div class="pt-2 border-t border-white/5">
+              <button
+                id="btn-wipe-database"
+                class="w-full text-rose-400 hover:text-rose-300 text-xs py-2 font-medium tracking-wide"
+              >
+                ⚠️ Kosongkan Seluruh Basis Data Lokal
+              </button>
+            </div>
           </div>
         </section>
       </main>
 
-      <!-- FAB -->
-      <div class="fixed right-5 bottom-24 z-30 flex flex-col gap-3">
-        <button id="fab-expense" class="fab-btn bg-rose-500/90">−</button>
-        <button id="fab-income" class="fab-btn bg-emerald-500/90">+</button>
-      </div>
+      <!-- FLOATING ACTION BUTTON (FAB) UTAMA -->
+      <button
+        id="fab-action"
+        class="fab-btn fixed right-5 bottom-24 z-30 bg-gradient-to-tr from-emerald-500 via-teal-500 to-sky-400 shadow-xl shadow-emerald-500/30"
+        title="Catat Baru"
+      >
+        +
+      </button>
 
-      <!-- BOTTOM NAV -->
+      <!-- BOTTOM NAVIGATION BAR -->
       <nav class="pb-safe fixed bottom-0 left-0 right-0 z-20">
         <div class="glass-nav mx-4 mb-3 rounded-2xl flex justify-around py-2">
           <button
-            data-view="dashboard"
-            class="nav-btn active-nav flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl"
+            data-target="dashboard"
+            class="nav-tab-btn active-nav flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl"
           >
-            <span>🏠</span><span class="text-[10px]">Dashboard</span>
+            <span class="text-base">🏠</span>
+            <span class="text-[10px] font-semibold tracking-tight"
+              >Dashboard</span
+            >
           </button>
           <button
-            data-view="history"
-            class="nav-btn flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl"
+            data-target="history"
+            class="nav-tab-btn flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl"
           >
-            <span>📋</span><span class="text-[10px]">Riwayat</span>
+            <span class="text-base">📋</span>
+            <span class="text-[10px] font-semibold tracking-tight"
+              >Riwayat</span
+            >
           </button>
           <button
-            data-view="backup"
-            class="nav-btn flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl"
+            data-target="notes"
+            class="nav-tab-btn flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl"
           >
-            <span>💾</span><span class="text-[10px]">Backup</span>
+            <span class="text-base">📝</span>
+            <span class="text-[10px] font-semibold tracking-tight"
+              >Catatan</span
+            >
+          </button>
+          <button
+            data-target="settings"
+            class="nav-tab-btn flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl"
+          >
+            <span class="text-base">⚙️</span>
+            <span class="text-[10px] font-semibold tracking-tight"
+              >Pengaturan</span
+            >
           </button>
         </div>
       </nav>
 
-      <!-- MODAL: INCOME -->
-      <div id="modal-income" class="modal-overlay hidden">
+      <!-- MODAL 1: CATAT UANG MASUK JUMAT BERKAH (HANYA NOMINAL UANG MASUK) -->
+      <div id="modal-new-income" class="modal-overlay hidden">
         <div class="modal-sheet">
           <div class="modal-handle"></div>
-          <h3 class="font-semibold text-lg mb-4">💰 Catat Uang Masuk</h3>
-          <form id="form-income" class="space-y-3">
+          <div class="flex items-center justify-between mb-3">
+            <h3
+              class="font-extrabold text-base gradient-text flex items-center gap-2"
+            >
+              <span>🍱</span> Catat Donasi Jumat Berkah
+            </h3>
+            <span
+              id="modal-income-date-label"
+              class="text-[11px] text-slate-400 font-medium"
+            ></span>
+          </div>
+
+          <form id="form-new-income" class="space-y-3.5">
             <div>
-              <label class="text-xs text-slate-400">Tanggal</label>
-              <input required type="date" name="date" class="input-field" />
-            </div>
-            <div>
-              <label class="text-xs text-slate-400"
+              <label class="text-[11px] text-slate-400 font-semibold block mb-1"
                 >Total Uang Masuk (Rp)</label
               >
               <input
                 required
-                type="number"
-                min="0"
-                name="amount"
-                placeholder="1500000"
-                class="input-field"
-              />
-            </div>
-            <div>
-              <label class="text-xs text-slate-400">Harga per Box (Rp)</label>
-              <input
-                required
-                type="number"
-                min="1"
-                name="pricePerBox"
-                placeholder="15000"
-                class="input-field"
-              />
-            </div>
-            <div class="glass-card p-3 flex items-center justify-between">
-              <span class="text-xs text-slate-400">Estimasi Jumlah Box</span>
-              <span id="income-box-preview" class="font-bold text-emerald-300"
-                >0 box</span
-              >
-            </div>
-            <div>
-              <label class="text-xs text-slate-400">Catatan (opsional)</label>
-              <input
+                id="input-new-income-amount"
                 type="text"
-                name="note"
-                placeholder="Jumat Berkah minggu ke-1"
-                class="input-field"
+                inputmode="numeric"
+                placeholder="Contoh: 1.500.000"
+                class="input-field text-base font-bold text-emerald-300"
               />
             </div>
+
+            <div
+              class="glass-card p-3.5 flex items-center justify-between bg-emerald-500/10 border-emerald-500/20"
+            >
+              <div>
+                <p
+                  class="text-[10px] uppercase font-bold text-emerald-400 tracking-wider"
+                >
+                  Estimasi Perolehan
+                </p>
+                <p class="text-[11px] text-slate-400" id="preview-calc-rate">
+                  Harga per box: Rp 15.000
+                </p>
+              </div>
+              <div class="text-right">
+                <span
+                  id="preview-new-income-box"
+                  class="text-xl font-black text-emerald-300"
+                  >0 box</span
+                >
+              </div>
+            </div>
+
             <div class="flex gap-2 pt-2">
-              <button type="button" class="btn-cancel flex-1" data-close-modal>
+              <button
+                type="button"
+                class="btn-cancel flex-1"
+                data-modal-dismiss
+              >
                 Batal
               </button>
               <button
                 type="submit"
-                class="btn-confirm flex-1 bg-emerald-500/90"
+                class="btn-confirm flex-1 bg-gradient-to-r from-emerald-500 to-teal-500"
               >
-                Simpan
+                Simpan Transaksi
               </button>
             </div>
           </form>
         </div>
       </div>
 
-      <!-- MODAL: EXPENSE -->
-      <div id="modal-expense" class="modal-overlay hidden">
+      <!-- MODAL 2: TAMBAH BELANJA BERTAHAP KE KARTU TRANSAKSI -->
+      <div id="modal-add-expense" class="modal-overlay hidden">
         <div class="modal-sheet">
           <div class="modal-handle"></div>
-          <h3 class="font-semibold text-lg mb-4">🛒 Catat Belanja</h3>
-          <form id="form-expense" class="space-y-3">
+          <div class="flex items-center justify-between mb-3">
             <div>
-              <label class="text-xs text-slate-400">Tanggal</label>
-              <input required type="date" name="date" class="input-field" />
+              <h3
+                class="font-extrabold text-base text-rose-300 flex items-center gap-1.5"
+              >
+                <span>🛒</span> Tambah Belanja Bertahap
+              </h3>
+              <p
+                id="modal-expense-tx-info"
+                class="text-[11px] text-slate-400 mt-0.5"
+              ></p>
             </div>
+          </div>
+
+          <form id="form-add-expense" class="space-y-3.5">
+            <input type="hidden" id="input-expense-parent-id" />
+
             <div>
-              <label class="text-xs text-slate-400">Nominal Belanja (Rp)</label>
+              <label class="text-[11px] text-slate-400 font-semibold block mb-1"
+                >Nominal Belanja (Rp)</label
+              >
               <input
                 required
-                type="number"
-                min="0"
-                name="amount"
-                placeholder="500000"
-                class="input-field"
-              />
-            </div>
-            <div>
-              <label class="text-xs text-slate-400">Kategori</label>
-              <select name="category" class="input-field">
-                <option value="Bahan Baku">Bahan Baku</option>
-                <option value="Box/Kemasan">Box / Kemasan</option>
-                <option value="Transport">Transport</option>
-                <option value="Lainnya">Lainnya</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-xs text-slate-400">Catatan (opsional)</label>
-              <input
+                id="input-expense-amount"
                 type="text"
-                name="note"
-                placeholder="Beli beras & ayam"
+                inputmode="numeric"
+                placeholder="Contoh: 39.000"
+                class="input-field text-base font-bold text-rose-300"
+              />
+            </div>
+
+            <div>
+              <label class="text-[11px] text-slate-400 font-semibold block mb-1"
+                >Keterangan / Bahan Belanja</label
+              >
+              <input
+                required
+                id="input-expense-name"
+                type="text"
+                placeholder="Contoh: Beli beras 5kg & bumbu dapur"
                 class="input-field"
               />
             </div>
+
+            <div
+              class="glass-card p-3 bg-white/5 flex items-center justify-between"
+            >
+              <span class="text-[11px] text-slate-400"
+                >Efek ke Saldo Bersih:</span
+              >
+              <span
+                id="preview-expense-impact"
+                class="text-xs font-bold text-rose-300"
+                >- Rp 0</span
+              >
+            </div>
+
             <div class="flex gap-2 pt-2">
-              <button type="button" class="btn-cancel flex-1" data-close-modal>
+              <button
+                type="button"
+                class="btn-cancel flex-1"
+                data-modal-dismiss
+              >
                 Batal
               </button>
-              <button type="submit" class="btn-confirm flex-1 bg-rose-500/90">
-                Simpan
+              <button
+                type="submit"
+                class="btn-confirm flex-1 bg-gradient-to-r from-rose-500 to-amber-500"
+              >
+                Potong Saldo
               </button>
             </div>
           </form>
         </div>
       </div>
 
-      <!-- TOAST -->
+      <!-- MODAL 3: EDITOR CATATAN ALA GOOGLE KEEP (CHECKLIST & TIMESTAMP) -->
+      <div id="modal-note-editor" class="modal-overlay hidden">
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+
+          <div class="flex items-center justify-between mb-2">
+            <h3
+              id="note-modal-title"
+              class="font-extrabold text-base gradient-text"
+            >
+              📝 Buat Catatan Baru
+            </h3>
+            <span
+              id="note-sync-timestamp"
+              class="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-emerald-300 font-medium"
+            ></span>
+          </div>
+
+          <form id="form-keep-note" class="space-y-3">
+            <input type="hidden" id="input-note-id" />
+
+            <div>
+              <input
+                required
+                id="input-note-title"
+                type="text"
+                placeholder="Judul Catatan..."
+                class="input-field font-bold text-base bg-transparent border-0 border-b border-white/15 rounded-none px-1 focus:border-emerald-400 focus:bg-transparent"
+              />
+            </div>
+
+            <div
+              class="space-y-2 max-h-48 overflow-y-auto pr-1"
+              id="note-checklist-builder"
+            ></div>
+
+            <div class="flex gap-2 pt-1">
+              <input
+                id="input-new-checklist-row"
+                type="text"
+                placeholder="+ Tambah butir checklist..."
+                class="input-field text-xs flex-1"
+              />
+              <button
+                type="button"
+                id="btn-add-checklist-row"
+                class="glass-btn px-3 rounded-xl text-xs font-bold"
+              >
+                Tambah
+              </button>
+            </div>
+
+            <div class="flex gap-2 pt-3">
+              <button
+                type="button"
+                class="btn-cancel flex-1"
+                data-modal-dismiss
+              >
+                Tutup
+              </button>
+              <button
+                type="submit"
+                class="btn-confirm flex-1 bg-gradient-to-r from-emerald-500 to-sky-500"
+              >
+                Simpan Catatan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- TOAST NOTIFICATION -->
       <div id="toast" class="toast hidden"></div>
     </div>
 

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --bounce-apple: cubic-bezier(0.34, 1.56, 0.64, 1);
   --spring-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -12,14 +12,15 @@ body {
   height: 100%;
   overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
+  background-color: #060913;
 }
 
 .bg-app {
   background: radial-gradient(
-    circle at 20% 0%,
-    #1e293b 0%,
-    #0f172a 45%,
-    #020617 100%
+    circle at 50% 0%,
+    #131c31 0%,
+    #090d16 55%,
+    #030509 100%
   );
 }
 
@@ -27,110 +28,169 @@ body {
   padding-top: max(env(safe-area-inset-top), 14px);
 }
 .pb-safe {
-  padding-bottom: max(env(safe-area-inset-bottom), 10px);
+  padding-bottom: max(env(safe-area-inset-bottom), 12px);
 }
 
-/* Liquid glass */
+/* Latar Belakang Liquid Blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatBlob 16s ease-in-out infinite alternate;
+}
+@keyframes floatBlob {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(30px, -25px) scale(1.15);
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #34d399 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Kartu Liquid Glassmorphism */
 .glass-card {
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.07),
     rgba(255, 255, 255, 0.02)
   );
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 22px;
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 24px;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transition: transform 0.25s var(--bounce);
+    0 12px 36px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.28s var(--bounce-apple),
+    border-color 0.2s ease;
 }
 .glass-card:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
+}
+
+.hero-card {
+  background: linear-gradient(
+    150deg,
+    rgba(52, 211, 153, 0.16) 0%,
+    rgba(56, 189, 248, 0.08) 50%,
+    rgba(15, 23, 42, 0.4) 100%
+  );
+  border-color: rgba(52, 211, 153, 0.25);
 }
 
 .glass-nav {
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(22px) saturate(180%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  background: rgba(10, 15, 29, 0.68);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
 }
 
-.nav-btn {
+.nav-tab-btn {
   color: #94a3b8;
-  transition: all 0.3s var(--bounce);
+  transition: all 0.3s var(--bounce-apple);
 }
-.nav-btn.active-nav {
+.nav-tab-btn.active-nav {
   color: #34d399;
-  background: rgba(52, 211, 153, 0.12);
-  transform: translateY(-2px) scale(1.05);
+  background: rgba(52, 211, 153, 0.14);
+  transform: translateY(-3px) scale(1.06);
 }
 
 .glass-btn {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  color: #f1f5f9;
   transition:
-    transform 0.2s var(--bounce),
+    transform 0.2s var(--bounce-apple),
     background 0.2s ease;
 }
 .glass-btn:active {
-  transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0.93);
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .glass-btn-primary {
-  background: linear-gradient(135deg, #34d399, #10b981);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
-  transition: transform 0.2s var(--bounce);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  box-shadow: 0 6px 22px rgba(16, 185, 129, 0.35);
+  color: white;
+  transition: transform 0.2s var(--bounce-apple);
 }
 .glass-btn-primary:active {
   transform: scale(0.96);
 }
 
 .fab-btn {
-  width: 54px;
-  height: 54px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   color: white;
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 300;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-  transition: transform 0.25s var(--bounce);
+  transition: transform 0.25s var(--bounce-apple);
+  animation: fabPulse 2.8s ease-in-out infinite;
+  border: none;
+  cursor: pointer;
 }
 .fab-btn:active {
-  transform: scale(0.85) rotate(8deg);
+  transform: scale(0.85) rotate(12deg);
+}
+@keyframes fabPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 25px rgba(16, 185, 129, 0.35),
+      0 0 0 0 rgba(52, 211, 153, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 12px 30px rgba(16, 185, 129, 0.5),
+      0 0 0 12px rgba(52, 211, 153, 0);
+  }
 }
 
 .input-field {
   width: 100%;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-radius: 16px;
+  padding: 11px 15px;
   font-size: 14px;
   outline: none;
   transition:
     border-color 0.2s ease,
     background 0.2s ease;
+  color: #f8fafc;
+}
+.input-field::placeholder {
+  color: #64748b;
 }
 .input-field:focus {
   border-color: rgba(52, 211, 153, 0.6);
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .btn-cancel,
 .btn-confirm {
-  padding: 12px;
-  border-radius: 14px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: transform 0.2s var(--bounce);
+  padding: 13px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 13px;
+  transition: transform 0.2s var(--bounce-apple);
 }
 .btn-cancel {
   background: rgba(255, 255, 255, 0.08);
@@ -141,15 +201,29 @@ body {
 }
 .btn-cancel:active,
 .btn-confirm:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
-/* Modal */
+/* Progress Bar */
+.progress-track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #38bdf8, #34d399);
+  transition: width 0.7s var(--bounce-apple);
+}
+
+/* Modals */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.6);
-  backdrop-filter: blur(6px);
+  background: rgba(3, 7, 18, 0.7);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: flex-end;
   z-index: 50;
@@ -160,19 +234,21 @@ body {
 }
 .modal-sheet {
   width: 100%;
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(24px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 28px 28px 0 0;
-  padding: 14px 20px calc(24px + env(safe-area-inset-bottom));
-  animation: slideUp 0.38s var(--bounce);
+  background: rgba(13, 19, 36, 0.94);
+  backdrop-filter: blur(28px) saturate(190%);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 32px 32px 0 0;
+  padding: 16px 22px calc(24px + env(safe-area-inset-bottom));
+  animation: slideUp 0.38s var(--bounce-apple);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 .modal-handle {
-  width: 42px;
+  width: 44px;
   height: 4px;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 99px;
-  margin: 0 auto 14px;
+  margin: 0 auto 16px;
 }
 
 @keyframes fadeIn {
@@ -198,15 +274,16 @@ body {
   bottom: 110px;
   left: 50%;
   transform: translateX(-50%) translateY(20px);
-  background: rgba(15, 23, 42, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(16px);
-  padding: 10px 18px;
-  border-radius: 14px;
+  background: rgba(13, 19, 36, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px);
+  padding: 11px 20px;
+  border-radius: 16px;
   font-size: 13px;
+  font-weight: 600;
   z-index: 60;
   opacity: 0;
-  transition: all 0.35s var(--bounce);
+  transition: all 0.35s var(--bounce-apple);
 }
 .toast.show {
   opacity: 1;
@@ -216,17 +293,237 @@ body {
   display: none;
 }
 
-/* List items */
-.tx-item {
-  animation: popIn 0.35s var(--bounce);
+/* Keep Note Checklist */
+.checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--bounce-apple);
+  flex-shrink: 0;
+  font-size: 12px;
+  color: white;
+  cursor: pointer;
 }
-@keyframes popIn {
+.checkbox-custom.checked {
+  background: linear-gradient(135deg, #34d399, #059669);
+  border-color: transparent;
+  transform: scale(1.06);
+}
+
+.item-pop-in {
+  animation: itemPopIn 0.35s var(--bounce-apple);
+}
+@keyframes itemPopIn {
   from {
     opacity: 0;
-    transform: scale(0.92) translateY(6px);
+    transform: scale(0.94) translateY(6px);
   }
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+/* ==========================================================================
+   ANIMASI PEMBUKA SPLASH SCREEN (SPIRAL DIVE & WATER SPLASH)
+   ========================================================================== */
+.water-background {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, #0d1e3a 0%, #060913 70%);
+  opacity: 0.9;
+}
+
+.food-spin-node {
+  animation: spiralDive 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes spiralDive {
+  0% {
+    transform: rotate(0deg) scale(2.2) translateY(-140px);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+    transform: rotate(240deg) scale(1.8) translateY(-90px);
+  }
+  60% {
+    transform: rotate(720deg) scale(1.1) translateY(-20px);
+  }
+  90% {
+    transform: rotate(1080deg) scale(0.4) translateY(40px);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(1260deg) scale(0) translateY(80px);
+    opacity: 0;
+  }
+}
+
+/* Gelombang Cincin Air (Water Ripple Rings) */
+.water-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(56, 189, 248, 0.7);
+  opacity: 0;
+  transform: scale(0);
+}
+.water-ring.ring-1 {
+  width: 90px;
+  height: 90px;
+  animation: waterRipple 1.4s cubic-bezier(0.1, 0.8, 0.3, 1) 1.5s forwards;
+}
+.water-ring.ring-2 {
+  width: 140px;
+  height: 140px;
+  border-color: rgba(52, 211, 153, 0.6);
+  animation: waterRipple 1.6s cubic-bezier(0.1, 0.8, 0.3, 1) 1.65s forwards;
+}
+.water-ring.ring-3 {
+  width: 200px;
+  height: 200px;
+  border-color: rgba(14, 165, 233, 0.4);
+  animation: waterRipple 1.8s cubic-bezier(0.1, 0.8, 0.3, 1) 1.8s forwards;
+}
+
+@keyframes waterRipple {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.9;
+    border-width: 4px;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+    border-width: 1px;
+  }
+}
+
+/* Partikel Percikan Air (Splash Droplets) */
+.splash-droplet {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #38bdf8, #34d399);
+  border-radius: 50%;
+  opacity: 0;
+}
+.drop-1 {
+  animation: splashDrop1 0.75s ease-out 1.52s forwards;
+}
+.drop-2 {
+  animation: splashDrop2 0.8s ease-out 1.54s forwards;
+}
+.drop-3 {
+  animation: splashDrop3 0.7s ease-out 1.53s forwards;
+}
+.drop-4 {
+  animation: splashDrop4 0.85s ease-out 1.55s forwards;
+}
+.drop-5 {
+  animation: splashDrop5 0.72s ease-out 1.52s forwards;
+}
+.drop-6 {
+  animation: splashDrop6 0.78s ease-out 1.54s forwards;
+}
+
+@keyframes splashDrop1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-45px, -60px) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes splashDrop2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(45px, -65px) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes splashDrop3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-65px, -25px) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes splashDrop4 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(65px, -30px) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes splashDrop5 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-20px, -80px) scale(0);
+    opacity: 0;
+  }
+}
+@keyframes splashDrop6 {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(25px, -75px) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Transisi Kemunculan Logo Note Food */
+.splash-brand-reveal {
+  animation: brandReveal 0.9s var(--bounce-apple) 2s forwards;
+}
+@keyframes brandReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.85);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.splash-fade-out {
+  animation: splashFadeOut 0.6s var(--spring-soft) forwards;
+}
+@keyframes splashFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+    pointer-events: none;
+    visibility: hidden;
   }
 }
