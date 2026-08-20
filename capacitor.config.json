@@ -1,0 +1,12 @@
+{
+  "appId": "com.notefood.app",
+  "appName": "Note Food",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

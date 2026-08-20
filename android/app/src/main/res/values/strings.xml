@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Note Food</string>
+    <string name="title_activity_main">Note Food</string>
+    <string name="package_name">com.notefood.app</string>
+    <string name="custom_url_scheme">com.notefood.app</string>
+</resources>
